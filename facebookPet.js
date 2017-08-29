@@ -543,8 +543,8 @@ commentByComment
         this.content = (this.comment.getElementsByClassName("UFICommentBody")[0].innerText) ? this.comment.getElementsByClassName("UFICommentBody")[0].innerText : false;
         this.numOfLikes = 0;
         this.isLiked = function () {
-            var x = this.likeBtn.getAttribute("data-ft"); // based on checking the data-ft attribute changement
-            return !(x.match(">"))? true:false; // ">" not liked
+            var x = this.likeBtn.getAttribute("aria-pressed"); // based on checking the data-ft attribute changement
+            return (x.match("true"))? true:false; // ">" not liked
         };
 
         this.unLike = function () {
