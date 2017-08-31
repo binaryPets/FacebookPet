@@ -33,7 +33,7 @@ commentByComment
              if (thereIsaComment)
                  getAFilterdComment
                      likeIt
-                     removeit
+                     removeit²
              else{
                 changePost = true
                 removepost
@@ -63,8 +63,8 @@ function postByPost(options, callback) {
 
 
             } catch (e) {
-                p.remove();
-                delete p;
+                // p.remove();
+                // delete p;
             }
 
 
@@ -199,146 +199,14 @@ function loadMore( of ) { of = ( of == undefined) ? "posts" : of ;
             break;
     }
 
-}
+};
 
 function forceLoadMore() {
-    window.scrollTo(0, window.outerHeight)
-}
-/**
- * user class
- * @param user Users Dom Element
- * @constructor
- */
-var User = function(user) {
-    this.current = user;
-    this.name = user.getElementsByClassName("_55lr")[0].innerText;
-    this.likeBtn = function() {
-        return user.getElementsByTagName("a")[0];
-    }
-    this.open = function() {
-        this.likeBtn().click();
-    }
-
+    window.scrollTo(0, window.outerHeight);
 };
-/**
- * @brief Chat class
- *
- * this class is dedicated for the chat bar
- * and all the functions that can be done for a message window
- * and everything related to the chat bar and chat windows
- * @constructor
- */
-var Chat = function() {
-    this.chat = document.getElementsByClassName("fbChatOrderedList"); //< chat Dom Element
-    /**
-     * @brief stores  the list of the users that appears on the
-     * @type {NodeList}
-     */
-    this.users = document.getElementsByClassName("_42fz"); //< Users Dom
-
-    this.tabs = function() {
-        return document.getElementById("ChatTabsPagelet");
-    }
-    /**
-     * @brief returns all the users on the Chat Tab
-     *
-     *
-     * @returns {NodeList|*} list of all the users on the Chat Tab
-     */
-    this.usersOnTab = function() {
-        return this.tabs().getElementsByClassName("fbDockChatTabFlyout");
-    };
-
-    this.message = document.getElementsByClassName("_552m"); //<
-    this.upperizer = function(string) {
-        var message = this.message;
-        /*
-         * options
-         *   {upperizer:()}*/
-        if (typeof string == "string" && message) {
-            var upperizerTimer = setInterval(function() {
 
 
-                for (var i = 0; i < message.length; i++) {
-                    //step one check the options
-                    if (message[i].value.match("{upperizer:(.+)}")) {
-                        string = message[i].value.match("{upperizer:(.+)}")[1];
-                        message[i].value = message[i].value.replace("{upperizer:(.+)}", "UPPERIZER : changed letters ");
-                    }
-                    if (message[i].value.match("{stopUpperizer}")) {
-                        message[i].value = message[i].value.replace("{stopUpperizer}", "UPPERIZER STOPED ");
-                        clearInterval(upperizerTimer);
-                    }
-                    console.log("step one done!")
-                    //step two check upperize
-                    for (var j = 0; j < string.length; j++) {
-                        message[i].value = message[i].value.replace(string[j], string[j].toUpperCase());
-                    }
-                    console.log("step two done!")
-                }
-            }, 500)
-        }
-    }
 
-    this.messagePrefix = function(symbole) {
-        symbole += " ";
-        var k = this.message;
-        var Prefixer = setInterval(function() {
-
-            for (var i = 0; i < k.length; i++) {
-                var value = "" + k[i].value;
-                var option = value.match("{prefix:(.+)}");
-
-                if (option) {
-                    symbole = option[1];
-
-                    k[i].value = "Prefix Changed";
-                    break
-                }
-                if (value.match("{stopPrefix}")) {
-                    clearInterval(Prefixer);
-                    k[i].value = "stoped";
-                    break
-                }
-
-                if (symbole.length > value.length) {
-                    k[i].value = symbole + " : ";
-                    continue;
-                }
-                for (var j = 0; j < symbole.length; j++) {
-                    if (symbole[j] != value[j]) {
-                        k[i].value = symbole + " : " + value;
-                        break;
-                    }
-                }
-
-            }
-        }, 2000)
-    }
-
-
-};
-var i = 0;
-var doneWithPosts = false;
-cleverProcessor = function(arrayOfElements, i, speed) {
-    doneWithPosts = false;
-    arrayOfElements.length;
-    i = (i) ? i : 0;
-    speed = (speed) ? speed : 2000;
-    if (i >= arrayOfElements.length) doneWithPosts = true;
-    if (i < arrayOfElements.length) {
-        setTimeout(function() {
-            //things to do
-            var current = arrayOfElements[i];
-            current.like();
-            current.toText();
-            current.remove();
-            //--------------------------------
-            cleverProcessor(arrayOfElements, i + 1)
-        }, 2000)
-    }
-
-}
 
 var posts = document.getElementsByClassName("_5v3q");
 
@@ -398,9 +266,12 @@ var filterdOnePost = function(options) {
             }
             if (condition) {
                 return current;
+            }else{
+                current.remove();
             }
-            current.remove();
+            
         } catch (e) {
+            console.log(e);
             posts[i].remove();
         }
     }
@@ -524,31 +395,7 @@ function Post(post) {
 }
 
 var currentPet = false;
-var Pikatchu = function() {
-    (currentPet) ? clearInterval(currentPet): "";
-    doneWithPosts = true; // we suppose that we are done with the posts
-    var filterdPostsArray = filterdPosts(); // we assign list of posts
-    //this is the Actions done to the WebPage we Are on
-    currentPet = setInterval(function() {
-        //if we are done with the posts
-        if (doneWithPosts) {
-            loadMore(); //we load more
 
-            setTimeout(function() {
-                filterdPostsArray = filterdPosts(); //we assign new list of posts
-                //we check if filterdPostsArray has items at least
-                if (filterdPostsArray.length) {
-                    cleverProcessor(filterdPostsArray, 0);
-                }
-            }, 2000)
-
-        } else {
-
-
-        }
-
-    }, 3000);
-}
 
 function Comment(comment) {
     this.comment = comment;
@@ -567,32 +414,8 @@ function Comment(comment) {
     this.like = function() {
         (this.isLiked()) ? false: this.likeBtn.click();
     };
-
-
 }
 var current;
 var appMsg = "";
 var users = "all"
 //it adds the button to the facebook blue menu bar
-function pikaLaunchButton() {
-    var pikaHtml = {};
-    pikaHtml.Li = document.createElement("li");
-    pikaHtml.Li.className = "_4fn6 _3zm-";
-    pikaHtml.A = document.createElement("a")
-    pikaHtml.A.className = "_2dpe _1ayn";
-    pikaHtml.A.title = "Like Every Thing !!";
-    pikaHtml.A.onclick = function() {
-        alert("a");
-    };
-    pikaHtml.Icon = document.createElement("img");
-    pikaHtml.Icon.className = "_s0 _2dpc _rw img";
-    pikaHtml.Icon.src = "https://www.facebook.com/rsrc.php/v3/yX/r/uAcPblDkfmn.png";
-    pikaHtml.Name = document.createElement("span");
-    pikaHtml.Name.className = "_2dpb";
-    pikaHtml.Name.innerText = "Pikachu";
-    pikaHtml.A.appendChild(pikaHtml.Icon);
-    pikaHtml.A.appendChild(pikaHtml.Name)
-    pikaHtml.Li.appendChild(pikaHtml.A);
-    var menuBlueBar = document.getElementsByClassName("_2t-f")[0];
-    menuBlueBar.insertBefore(pikaHtml.Li, menuBlueBar.childNodes[0]);
-}
