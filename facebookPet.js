@@ -54,7 +54,7 @@ function postByPost(options, callback) {
                 } else {
                     p.like();
                     console.log("[?]a post has Been Liked :D ");
-                    p.remove();
+                    // p.remove();
 
                     console.log("[X]a post has Been Removed :D ");
 
@@ -266,13 +266,13 @@ var filterdOnePost = function(options) {
             }
             if (condition) {
                 return current;
-            }else{
-                current.remove();
+            } else {
+                //current.remove();
             }
-            
+
         } catch (e) {
             console.log(e);
-            posts[i].remove();
+            //posts[i].remove();
         }
     }
 }
@@ -351,11 +351,19 @@ function Post(post) {
 
     //check existence of comments
     this.hasComments = function() {
+        if(post.getElementsByClassName("_ipm")){
+            if(post.getElementsByClassName("UFIList").length == 0){
+                document.getElementsByClassName("_ipm")[0].click();
+            }
+        }
         return (this.post.getElementsByClassName("UFIComment")) ? true : false;
     }
     //fetch all the comments of the present post
     this.comments = function() {
-        return (this.hasComments()) ? this.post.getElementsByClassName("UFIComment") : false;
+       
+            return ((this.hasComments()) ? this.post.getElementsByClassName("UFIComment") : false);
+    
+
     }
     //comment Expander
     this.commentExpander = function() {
@@ -364,10 +372,18 @@ function Post(post) {
             btn.click();
         } else return btn;
     };
+    this.commentsHandler = function(handle) {
+        if (this.comments()) {
+            currentComment = this.comments()[0];
+            handle(new Comment(currentComment), this);
+        }
+        
+
+    };
     //check if the post is liked
     this.isLiked = function() {
 
-        return (this.post.getElementsByClassName("UFILinkBright")[0]) ? true : false
+        return (this.btn.getAttribute("aria-pressed") == "true") ? true : false
     };
     this.content = (this.post.getElementsByClassName("userContent")[0].innerText) ? this.post.getElementsByClassName("userContent")[0].innerText : false;
     //UnLike the Current Post
@@ -395,26 +411,6 @@ function Post(post) {
 }
 
 var currentPet = false;
-
-
-function Comment(comment) {
-    this.comment = comment;
-    this.user = comment.getElementsByClassName("UFICommentActorName")[0].innerText;
-    this.likeBtn = comment.getElementsByClassName("UFILikeLink")[0];
-    this.content = (this.comment.getElementsByClassName("UFICommentBody")[0].innerText) ? this.comment.getElementsByClassName("UFICommentBody")[0].innerText : false;
-    this.numOfLikes = 0;
-    this.isLiked = function() {
-        var x = this.likeBtn.getAttribute("aria-pressed"); // based on checking the data-ft attribute changement
-        return (x.match("true")) ? true : false; // ">" not liked
-    };
-
-    this.unLike = function() {
-        (this.isLiked()) ? this.likeBtn.click(): false;
-    };
-    this.like = function() {
-        (this.isLiked()) ? false: this.likeBtn.click();
-    };
-}
 var current;
 var appMsg = "";
 var users = "all"
