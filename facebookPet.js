@@ -383,7 +383,7 @@ function Post(post) {
     //check if the post is liked
     this.isLiked = function() {
 
-        return (this.btn.getAttribute("aria-pressed") == "true") ? true : false
+        return (this.likeBtn().getAttribute("aria-pressed") == "true") ? true : false
     };
     this.content = (this.post.getElementsByClassName("userContent")[0].innerText) ? this.post.getElementsByClassName("userContent")[0].innerText : false;
     //UnLike the Current Post
